@@ -4,7 +4,7 @@ LDFLAGS = -Llib
 LIBS = -lglfw3 -lopengl32 -lgdi32 -luser32 -lkernel32
 
 DIR = src
-PROG = main.c glad.c
+PROG = main.c glad.c stdread.c
 SRC = $(addprefix $(DIR)/, $(PROG))
 BIN = program
 OUT = -o
