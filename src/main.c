@@ -44,12 +44,18 @@ int main(void) {
     // =========================
     // Dados do triângulo
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f, // esquerda/baixo
-         0.5f, -0.5f, 0.0f, // direita/baixo
-         0.0f,  0.5f, 0.0f  // topo
+        0.5f, 0.5f, 0.0f, // cima/direita
+        0.5f, -0.5f, 0.0f, // baixo/direita
+        -0.5f, -0.5f, 0.0f, // baixo/esquerda
+        -0.5f, 0.5f, 0.0f // cima/esquerda
     };
 
-    unsigned int VBO, VAO;
+    unsigned int indices[] = { // começa do 0
+        0, 1, 3, // primeiro triangulo
+        1, 2, 3 // segundo triangulo
+    };
+
+    unsigned int VBO, VAO, EBO;
 
     // Cria e vincula VAO
     glGenVertexArrays(1, &VAO);
@@ -59,6 +65,12 @@ int main(void) {
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // cria e vincula EBO
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    
 
     // Configura atributo de vértice
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -137,16 +149,17 @@ int main(void) {
     // =========================
     // Render loop
     while (!glfwWindowShouldClose(window)) {
+        // input
         process_input(window);
 
+        // rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Usar shader program e VAO para desenhar
         glUseProgram(shader_program);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -155,6 +168,7 @@ int main(void) {
     // Limpar recursos
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glDeleteProgram(shader_program);
 
     glfwTerminate();
