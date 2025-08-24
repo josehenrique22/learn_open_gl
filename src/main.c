@@ -43,16 +43,35 @@ int main(void) {
 
     // =========================
     // Dados do triângulo
-    float vertices[] = {
-        0.5f, 0.5f, 0.0f, // cima/direita
-        0.5f, -0.5f, 0.0f, // baixo/direita
-        -0.5f, -0.5f, 0.0f, // baixo/esquerda
-        -0.5f, 0.5f, 0.0f // cima/esquerda
-    };
 
+    /*  (1)             (0)           (4)        
+        
+        +---------------------------------+
+        |                |                |
+        |                |                |
+        |                |                |
+        |                |                |
+        +----------------+----------------+
+        
+        (2)             (3)            (5) 
+    */
+    float vertices[] = {
+        0.5f, 0.5f, 0.0f, // 0 - cima/direita
+        0.5f, -0.5f, 0.0f, // 1 - baixo/direita
+        -0.5f, -0.5f, 0.0f, // 2 - baixo/esquerda
+        -0.5f, 0.5f, 0.0f, // 3 - cima/esquerda
+
+        1.5f,  0.5f, 0.0f,  // 4 - topo/direita (novo)
+        1.5f, -0.5f, 0.0f,  // 5 - baixo/direita (novo)
+    };
+    
     unsigned int indices[] = { // começa do 0
         0, 1, 3, // primeiro triangulo
-        1, 2, 3 // segundo triangulo
+        1, 2, 3, // segundo triangulo
+
+        // quadrado da direita (novo)
+        4, 5, 0,
+        5, 1, 0
     };
 
     unsigned int VBO, VAO, EBO;
@@ -159,7 +178,7 @@ int main(void) {
         // Usar shader program e VAO para desenhar
         glUseProgram(shader_program);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
